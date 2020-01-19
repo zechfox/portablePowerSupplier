@@ -13,7 +13,7 @@
 PROJECT = pps
 BUILD_DIR = bin
 
-SOURCE_PATH = ./source
+SOURCE_PATH = ./sources
 PROJECT_SRCS := $(shell find $(SOURCE_PATH) -name '*.c')
 INCLUDES += $(patsubst %,-I%, . $(SOURCE_PATH))
 
