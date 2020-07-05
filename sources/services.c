@@ -1,3 +1,5 @@
+#include <stddef.h>
+
 #include "services.h"
 
 Event g_hmi_event_fifo_queue[HMI_EVENT_QUEUE_LENGTH];
@@ -5,10 +7,10 @@ Event g_rc_event_fifo_queue[RC_EVENT_QUEUE_LENGTH];
 Event g_tick_event_fifo_queue[TICK_EVENT_QUEUE_LENGTH];
 
 // pop out event from g_hmi_event_fifo_queue
-bool hmi_event(Action action, Event * pEvent)
+bool handle_hmi_event(Action action, Event * pEvent)
 {
-  static uint8_t s_pop_index = 0; 
-  static uint8_t s_push_index = 0;
+  static unsigned char s_pop_index = 0; 
+  static unsigned char s_push_index = 0;
   Event new_event;
 
   if (POP == action)
@@ -16,7 +18,7 @@ bool hmi_event(Action action, Event * pEvent)
     if ( ( HMI_EVENT_QUEUE_LENGTH > (s_push_index - s_pop_index) )
       && ( (s_push_index - s_pop_index) > 0 ) )
     {
-      pEvent = g_hmi_event_fifo_queue[s_pop_index & HMI_EVENT_QUEUE_LENGTH];
+      pEvent = &g_hmi_event_fifo_queue[s_pop_index & HMI_EVENT_QUEUE_LENGTH];
       s_pop_index++;
     }
     // * is event, - is empty.
@@ -26,7 +28,7 @@ bool hmi_event(Action action, Event * pEvent)
     else if ( (255 - HMI_EVENT_QUEUE_LENGTH) < (s_pop_index - s_push_index) )
     {
       // push index was wrapped
-      pEvent = g_hmi_event_fifo_queue[s_pop_index & HMI_EVENT_QUEUE_LENGTH];
+      pEvent = &g_hmi_event_fifo_queue[s_pop_index & HMI_EVENT_QUEUE_LENGTH];
       s_pop_index++;
     }
     else
@@ -46,10 +48,10 @@ bool hmi_event(Action action, Event * pEvent)
   return true;
 }
 
-bool rc_event(Action action, Event * pEvent)
+bool handle_rc_event(Action action, Event * pEvent)
 {
-  static uint8_t s_pop_index = 0; 
-  static uint8_t s_push_index = 0;
+  static unsigned char s_pop_index = 0; 
+  static unsigned char s_push_index = 0;
   Event new_event;
 
   if (POP == action)
@@ -57,7 +59,7 @@ bool rc_event(Action action, Event * pEvent)
     if ( ( RC_EVENT_QUEUE_LENGTH > (s_push_index - s_pop_index) )
       && ( (s_push_index - s_pop_index) > 0 ) )
     {
-      pEvent = g_rc_event_fifo_queue[s_pop_index & RC_EVENT_QUEUE_LENGTH];
+      pEvent = &g_rc_event_fifo_queue[s_pop_index & RC_EVENT_QUEUE_LENGTH];
       s_pop_index++;
     }
     // * is event, - is empty.
@@ -67,7 +69,7 @@ bool rc_event(Action action, Event * pEvent)
     else if ( (255 - RC_EVENT_QUEUE_LENGTH) < (s_pop_index - s_push_index) )
     {
       // push index was wrapped
-      pEvent = g_rc_event_fifo_queue[s_pop_index & RC_EVENT_QUEUE_LENGTH];
+      pEvent = &g_rc_event_fifo_queue[s_pop_index & RC_EVENT_QUEUE_LENGTH];
       s_pop_index++;
     }
     else
@@ -87,10 +89,10 @@ bool rc_event(Action action, Event * pEvent)
   return true;
 }
 
-bool tick_event(Action action, Event * pEvent)
+bool handle_tick_event(Action action, Event * pEvent)
 {
-  static uint8_t s_pop_index = 0; 
-  static uint8_t s_push_index = 0;
+  static unsigned char s_pop_index = 0; 
+  static unsigned char s_push_index = 0;
   Event new_event;
 
   if (POP == action)
@@ -98,7 +100,7 @@ bool tick_event(Action action, Event * pEvent)
     if ( ( TICK_EVENT_QUEUE_LENGTH > (s_push_index - s_pop_index) )
       && ( (s_push_index - s_pop_index) > 0 ) )
     {
-      pEvent = g_tick_event_fifo_queue[s_pop_index & TICK_EVENT_QUEUE_LENGTH];
+      pEvent = &g_tick_event_fifo_queue[s_pop_index & TICK_EVENT_QUEUE_LENGTH];
       s_pop_index++;
     }
 
@@ -109,7 +111,7 @@ bool tick_event(Action action, Event * pEvent)
     else if ( (255 - TICK_EVENT_QUEUE_LENGTH) < (s_pop_index - s_push_index) )
     {
       // push index was wrapped
-      pEvent = g_tick_event_fifo_queue[s_pop_index & TICK_EVENT_QUEUE_LENGTH];
+      pEvent = &g_tick_event_fifo_queue[s_pop_index & TICK_EVENT_QUEUE_LENGTH];
       s_pop_index++;
     }
     else
@@ -129,11 +131,11 @@ bool tick_event(Action action, Event * pEvent)
 }
 
 // human machine interface service
-void run_hmi_service()
+void run_hmi_service(void)
 {
   Event * event_ptr = NULL; 
 
-  if(pop_hmi_event(event_ptr))
+  if(handle_hmi_event(POP, event_ptr))
   {
 
   }
@@ -141,14 +143,14 @@ void run_hmi_service()
 }
 
 // remote control service
-void run_rc_service()
+void run_rc_service(void)
 {
 
   return;
 }
 
 // timer service
-void run_tick_service()
+void run_tick_service(void)
 {
 
   return;

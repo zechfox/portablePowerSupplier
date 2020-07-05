@@ -1,4 +1,4 @@
-
+#include <stdbool.h>
 #define HMI_EVENT_QUEUE_LENGTH 16U
 #define RC_EVENT_QUEUE_LENGTH 16U
 #define TICK_EVENT_QUEUE_LENGTH 16U
@@ -39,11 +39,11 @@ typedef struct {
 
 } Event;
 
-bool hmi_event(Action action, Event *pEvent);
-bool rc_event(Action action, Event *pEvent);
-bool tick_event(Action action, Event *pEvent);
+bool handle_hmi_event(Action action, Event *pEvent);
+bool handle_rc_event(Action action, Event *pEvent);
+bool handle_tick_event(Action action, Event *pEvent);
 
-void run_hmi_service();
-void run_rc_service();
-void run_tick_service();
+void run_hmi_service(void);
+void run_rc_service(void);
+void run_tick_service(void);
 
