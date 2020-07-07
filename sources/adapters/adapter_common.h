@@ -95,6 +95,7 @@ void mcu_timer_init(void);
 void mcu_usart_init(void);
 void mcu_i2c_init(void);
 void mcu_adc_init(void);
+void mcu_gpio_init(void);
 
 void adapter_mcu_init(void);
 void adapter_lcd_init(void);

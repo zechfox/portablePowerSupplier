@@ -1,14 +1,17 @@
 #include "services.h"
-#include "adapter_common.h"
+#include "adapters/adapter_common.h"
 
-void init_adapters()
+void init_adapters(void);
+void run_server(void);
+
+void init_adapters(void)
 {
   adapter_mcu_init();
   adapter_encoder_init();
   adapter_lcd_init();
 }
 
-void run_server()
+void run_server(void)
 {
   while(1)
   {
@@ -19,11 +22,11 @@ void run_server()
   return;
 }
 
-void main()
+int main(void)
 {
   init_adapters();
 
   run_server();
 
-  return;
+  return 0;
 }

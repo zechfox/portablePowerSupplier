@@ -1,15 +1,17 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 #include <libopencm3/stm32/usart.h>
+#include <libopencm3/cm3/nvic.h>
+
 
 #include "adapter_common.h"
 
-static void mcu_clock_init(void)
+void mcu_clock_init(void)
 {
   rcc_clock_setup_in_hse_8mhz_out_48mhz();
 }
 
-static void mcu_usart_init(void)
+void mcu_usart_init(void)
 {
   // Enable clocks for USART1.
   rcc_periph_clock_enable(RCC_USART1);
@@ -45,7 +47,7 @@ void usart1_isr(void)
 
 }
 
-static void mcu_gpio_init(void)
+void mcu_gpio_init(void)
 {
 
   // channel1 converstion pin
@@ -62,11 +64,6 @@ static void mcu_gpio_init(void)
 }
 
 void mcu_i2c_init()
-{
-
-}
-
-void mcu_usart_init()
 {
 
 }
