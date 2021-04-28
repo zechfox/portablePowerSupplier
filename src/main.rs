@@ -2,6 +2,8 @@
 #![no_std]
 #![no_main]
 
+mod services;
+
 use cortex_m_rt::entry; // The runtime
 use embedded_hal::digital::v2::OutputPin; // the `set_high/low`function
 use stm32f1xx_hal::{delay::Delay, pac, prelude::*}; // STM32F1 specific functions
