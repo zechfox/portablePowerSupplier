@@ -3,6 +3,7 @@
 #![no_main]
 
 mod services;
+mod adapters;
 
 use cortex_m_rt::entry; // The runtime
 use embedded_hal::digital::v2::OutputPin; // the `set_high/low`function
@@ -10,6 +11,10 @@ use stm32f1xx_hal::{delay::Delay, pac, prelude::*}; // STM32F1 specific function
 #[allow(unused_imports)]
 use panic_halt; // When a panic occurs, stop the microcontroller
 
+#[allow(unused_imports)]
+use crate::{
+    adapters::uart::{Uart2, UartConfiguration, UartParity, UartStopBits},
+};
 // This marks the entrypoint of our application. The cortex_m_rt creates some
 // startup code before this, but we don't need to worry about this
 #[entry]
