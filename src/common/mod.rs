@@ -1,2 +1,2 @@
-mod const;
-mod struct;
+pub mod constants;
+pub mod structs;

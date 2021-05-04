@@ -12,7 +12,11 @@ use mcu_hal::{
     gpio::gpioa::{PA2, PA3},
     stm32,
 };
+use nb::block;
 
+use crate::common::{
+    constants,
+};
 pub enum UartParity {
     Even,
     Odd,
@@ -27,9 +31,9 @@ pub enum UartStopBits {
 }
 
 pub struct UartConfiguration {
-    baud_rate: Option<u32>,
-    parity: Option<UartParity>,
-    stop_bits: Option<UartStopBits>,
+    pub baud_rate: Option<u32>,
+    pub parity: Option<UartParity>,
+    pub stop_bits: Option<UartStopBits>,
 }
 
 pub struct Uart2 {
@@ -37,16 +41,16 @@ pub struct Uart2 {
 }
 
 impl Uart2 {
-    fn new(self, uart_config: UartConfiguration) -> Self {
+    pub fn new(uart_config: UartConfiguration) -> Self {
         let mut config = Config::default();
         let p = pac::Peripherals::take().unwrap();
         let mut flash = p.FLASH.constrain();
         let mut rcc = p.RCC.constrain();
-        let clocks = rcc.cfgr.freeze(&mut flash.acr);
+        let clocks = rcc.cfgr.sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut flash.acr);
         let mut afio = p.AFIO.constrain(&mut rcc.apb2);
 
         config = match uart_config.baud_rate {
-            None => config.baudrate(115200.bps()),
+            None => config.baudrate(constants::BAUD_RATE_115200.bps()),
             Some(i) => config.baudrate(i.bps()),
         };
         config = match uart_config.parity {
@@ -79,5 +83,9 @@ impl Uart2 {
         );
 
         Self { serial }
+    }
+
+    pub fn write_byte(&mut self, b: u8) {
+        block!(self.serial.write(b)).ok();
     }
 }
