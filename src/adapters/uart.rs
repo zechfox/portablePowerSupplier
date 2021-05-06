@@ -2,13 +2,13 @@
 #![no_main]
 #![no_std]
 
-use stm32f1xx_hal as mcu_hal;
+use stm32f0xx_hal as mcu_hal;
 use panic_halt as _;
 use mcu_hal::{
     pac,
     prelude::*,
-    serial::{Config, Serial, StopBits},
-    gpio::{Alternate, Floating, Input, PushPull},
+    serial::{Serial},
+    gpio::{Alternate, AF1},
     gpio::gpioa::{PA2, PA3},
     stm32,
 };
@@ -37,49 +37,27 @@ pub struct UartConfiguration {
 }
 
 pub struct Uart2 {
-    serial: Serial<stm32::USART2, (PA2<Alternate<PushPull>>, PA3<Input<Floating>>)>,
+    serial: Serial<stm32::USART2, PA2<Alternate<AF1>>, PA3<Alternate<AF1>>>,
 }
 
 impl Uart2 {
     pub fn new(uart_config: UartConfiguration) -> Self {
-        let mut config = Config::default();
         let p = pac::Peripherals::take().unwrap();
-        let mut flash = p.FLASH.constrain();
-        let mut rcc = p.RCC.constrain();
-        let clocks = rcc.cfgr.sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut flash.acr);
-        let mut afio = p.AFIO.constrain(&mut rcc.apb2);
+        let mut flash = p.FLASH;
+        let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut flash);
 
-        config = match uart_config.baud_rate {
-            None => config.baudrate(constants::BAUD_RATE_115200.bps()),
-            Some(i) => config.baudrate(i.bps()),
-        };
-        config = match uart_config.parity {
-            None => config.parity_none(),
-            Some(i) => match i {
-                UartParity::Even => config.parity_even(),
-                UartParity::Odd  => config.parity_odd(),
-                UartParity::None => config.parity_none(),
-            }
-        };
-        config = match uart_config.stop_bits {
-            None => config.stopbits(StopBits::STOP1),
-            Some(stop_bits) => match stop_bits {
-                UartStopBits::Stop1   => config.stopbits(StopBits::STOP1),
-                UartStopBits::Stop0P5 => config.stopbits(StopBits::STOP0P5),
-                UartStopBits::Stop2   => config.stopbits(StopBits::STOP2),
-                UartStopBits::Stop1P5 => config.stopbits(StopBits::STOP1P5),
-            },
-        };
-        let mut gpioa = p.GPIOA.split(&mut rcc.apb2);
-        let tx = gpioa.pa2.into_alternate_push_pull(&mut gpioa.crl);
-        let rx = gpioa.pa3;
+        let gpioa = p.GPIOA.split(&mut rcc);
+        let (tx, rx) = cortex_m::interrupt::free(move |cs| {
+            (
+                gpioa.pa2.into_alternate_af1(cs),
+                gpioa.pa3.into_alternate_af1(cs),
+            )
+        });
         let serial = Serial::usart2(
             p.USART2,
             (tx, rx),
-            &mut afio.mapr,
-            config,
-            clocks,
-            &mut rcc.apb1,
+            constants::BAUD_RATE_115200.bps(),
+            &mut rcc,
         );
 
         Self { serial }
