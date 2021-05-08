@@ -8,12 +8,7 @@ mod devices;
 mod common;
 
 use cortex_m_rt::entry; // The runtime
-#[allow(unused_imports)]
-use panic_halt; // When a panic occurs, stop the microcontroller
-#[allow(unused_imports)]
-use crate::{
-    adapters::uart::{Uart2, UartBuilder, UartConfiguration, UartParity, UartStopBits},
-};
+use panic_halt as _; // When a panic occurs, stop the microcontroller
 use crate::{
     devices::transceiver::{Transceiver, SerialPort},
 };

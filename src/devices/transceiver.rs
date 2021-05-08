@@ -18,8 +18,8 @@ impl Device for SerialPort {
     }
 }
 
-pub struct Transceiver<T: Device> {
-    device: T,
+pub struct Transceiver<DeviceType: Device> {
+    device: DeviceType,
 }
 
 /// This function may be used on Uart transceiver
@@ -37,9 +37,9 @@ impl Transceiver<SerialPort> {
     }
 }
 
-impl<T> Transceiver<T>
+impl<DeviceType> Transceiver<DeviceType>
 where
-    T: Device,
+    DeviceType: Device,
 {
     pub fn write_byte(&mut self, b: u8) {
        self.device.write_byte(b); 
