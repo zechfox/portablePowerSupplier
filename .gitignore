@@ -51,6 +51,11 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# vim temp file
+*.swp
+
+# bin file
+*.bin
 
 # Added by cargo
 
