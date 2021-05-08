@@ -1,6 +1,4 @@
 #![deny(unsafe_code)]
-#![no_main]
-#![no_std]
 
 use stm32f0xx_hal as mcu_hal;
 use panic_halt as _;
@@ -18,12 +16,13 @@ use cortex_m::singleton;
 use crate::common::{
     constants,
 };
+#[allow(dead_code)]
 pub enum UartParity {
     Even,
     Odd,
     None,
 }
-
+#[allow(dead_code)]
 pub enum UartStopBits {
     Stop1,
     Stop0P5,
@@ -67,7 +66,7 @@ impl UartBuilder {
         let serial = Serial::usart2(
             p.USART2,
             (tx, rx),
-            constants::BAUD_RATE_115200.bps(),
+            self.configuration.baud_rate.unwrap().bps(),
             &mut rcc,
         );
 

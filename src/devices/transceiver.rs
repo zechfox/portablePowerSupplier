@@ -1,6 +1,8 @@
 use crate::{
     adapters::uart::{Uart2, UartBuilder, UartConfiguration, UartParity, UartStopBits},
+    common::constants::{BAUD_RATE_115200},
 };
+
 
 pub trait Device {
     fn write_byte(&mut self, b:u8);
@@ -24,7 +26,7 @@ pub struct Transceiver<T: Device> {
 impl Transceiver<SerialPort> {
     pub fn new() -> Self {
         let uart_conf = UartConfiguration {
-        baud_rate: Some(115200),
+        baud_rate: Some(BAUD_RATE_115200),
         parity: Some(UartParity::None),
         stop_bits: Some(UartStopBits::Stop1),
     };

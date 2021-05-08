@@ -1,5 +1,5 @@
 [package]
-name = "portablePowerSupplier"
+name = "portable_power_supplier"
 version = "0.1.0"
 authors = ["zechfox <zechfox>"]
 edition = "2018"

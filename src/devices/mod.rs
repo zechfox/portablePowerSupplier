@@ -1,9 +1,9 @@
 pub mod lcd;
 pub mod encoder;
-pub mod currentMeter;
-pub mod voltageMeter;
+pub mod current_meter;
+pub mod voltage_meter;
 pub mod transceiver;
-pub mod voltageRegular;
-pub mod currentRegular;
+pub mod voltage_regular;
+pub mod current_regular;
 pub mod timer;
 pub mod storage;
