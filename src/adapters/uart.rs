@@ -14,6 +14,7 @@ use mcu_hal::{
 };
 use nb::block;
 
+use cortex_m::singleton;
 use crate::common::{
     constants,
 };
@@ -36,12 +37,22 @@ pub struct UartConfiguration {
     pub stop_bits: Option<UartStopBits>,
 }
 
+pub struct UartBuilder {
+    configuration: UartConfiguration,
+}
+
 pub struct Uart2 {
     serial: Serial<stm32::USART2, PA2<Alternate<AF1>>, PA3<Alternate<AF1>>>,
 }
 
-impl Uart2 {
-    pub fn new(uart_config: UartConfiguration) -> Self {
+impl UartBuilder {
+    pub fn new(conf: UartConfiguration) -> Self {
+        Self {
+            configuration: conf,
+        }
+    }
+    
+    pub fn take_uart2(self) -> &'static mut Uart2 {
         let p = pac::Peripherals::take().unwrap();
         let mut flash = p.FLASH;
         let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut flash);
@@ -60,9 +71,12 @@ impl Uart2 {
             &mut rcc,
         );
 
-        Self { serial }
+        singleton!(: Uart2 = Uart2{serial}).unwrap()
     }
+}
 
+
+impl Uart2 {
     pub fn write_byte(&mut self, b: u8) {
         block!(self.serial.write(b)).ok();
     }

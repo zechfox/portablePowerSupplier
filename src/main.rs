@@ -4,6 +4,7 @@
 
 mod services;
 mod adapters;
+mod devices;
 mod common;
 
 use cortex_m_rt::entry; // The runtime
@@ -13,7 +14,10 @@ use stm32f0xx_hal::{delay::Delay, pac, prelude::*}; // STM32F1 specific function
 use panic_halt; // When a panic occurs, stop the microcontroller
 #[allow(unused_imports)]
 use crate::{
-    adapters::uart::{Uart2, UartConfiguration, UartParity, UartStopBits},
+    adapters::uart::{Uart2, UartBuilder, UartConfiguration, UartParity, UartStopBits},
+};
+use crate::{
+    devices::transceiver::{Transceiver, SerialPort},
 };
 // This marks the entrypoint of our application. The cortex_m_rt creates some
 // startup code before this, but we don't need to worry about this
@@ -24,11 +28,13 @@ fn main() -> ! {
         parity: Some(UartParity::None),
         stop_bits: Some(UartStopBits::Stop1),
     };
-    let mut uart = Uart2::new(uart_conf);
+    //let mut uart = Uart2::new(uart_conf);
 
-    let sent = b'X';
+    //let uart = UartBuilder::new(uart_conf).take_uart2();
+    let mut tr: Transceiver<SerialPort> = Transceiver::new();
+    let sent = b'Y';
     // Now, enjoy it
     loop {
-       uart.write_byte(sent); 
+       tr.write_byte(sent); 
     }
 }

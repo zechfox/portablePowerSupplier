@@ -1,7 +1,7 @@
 # .cargo/config
 [build]
-# Always compile for the isntruction set of the STM32F1
-target = "thumbv7m-none-eabi"
+# Always compile for the isntruction set of the STM32F0
+target = "thumbv6m-none-eabi"
 
 # use the Tlink.x script from the cortext-m-rt crate
 rustflags = [ "-C", "link-arg=-Tlink.x"]
