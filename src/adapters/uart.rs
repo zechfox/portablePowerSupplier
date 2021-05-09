@@ -11,7 +11,7 @@ use mcu_hal::{
     stm32,
 };
 use nb::block;
-
+use core::fmt::Write;
 use cortex_m::singleton;
 use crate::common::{
     constants,
@@ -78,5 +78,8 @@ impl UartBuilder {
 impl Uart2 {
     pub fn write_byte(&mut self, b: u8) {
         block!(self.serial.write(b)).ok();
+    }
+    pub fn write_str(&mut self, s: &str) {
+        self.serial.write_str(s).ok();
     }
 }

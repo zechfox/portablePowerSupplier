@@ -6,6 +6,7 @@ use crate::{
 
 pub trait Device {
     fn write_byte(&mut self, b:u8);
+    fn write_str(&mut self, s: &str);
 }
 
 pub struct SerialPort {
@@ -15,6 +16,9 @@ pub struct SerialPort {
 impl Device for SerialPort {
     fn write_byte(&mut self, b:u8) {
         self.peripheral.write_byte(b);
+    }
+    fn write_str(&mut self, s: &str) {
+        self.peripheral.write_str(s);
     }
 }
 
@@ -42,6 +46,9 @@ where
     DeviceType: Device,
 {
     pub fn write_byte(&mut self, b: u8) {
-       self.device.write_byte(b); 
+        self.device.write_byte(b); 
+    }
+    pub fn write_str(&mut self, s: &str) {
+        self.device.write_str(s);
     }
 }
