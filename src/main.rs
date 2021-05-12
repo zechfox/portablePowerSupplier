@@ -19,6 +19,7 @@ use crate::{
 #[entry]
 fn main() -> ! {
     log!("Hello world!\n");
+    log!("dadada {}", 0i32);
     display_init();
     // Now, enjoy it
     loop {
