@@ -13,7 +13,7 @@ pub struct Logger;
 macro_rules! log {
     // NEW!
     ($($string:expr), +) => {
-        ufmt::uwrite!(Logger, $($string)+).unwrap();
+        ufmt::uwriteln!(Logger, $($string)+).unwrap();
     };
 }
 
