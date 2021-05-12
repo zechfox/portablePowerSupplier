@@ -12,7 +12,6 @@ use mcu_hal::{
 };
 use nb::block;
 use core::fmt::Write;
-use cortex_m::singleton;
 use crate::common::{
     constants,
 };
@@ -51,7 +50,7 @@ impl UartBuilder {
         }
     }
     
-    pub fn take_uart2(self) -> &'static mut Uart2 {
+    pub fn take_uart2(self) -> Uart2 {
         let p = pac::Peripherals::take().unwrap();
         let mut flash = p.FLASH;
         let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut flash);
@@ -70,7 +69,8 @@ impl UartBuilder {
             &mut rcc,
         );
 
-        singleton!(: Uart2 = Uart2{serial}).unwrap()
+        Uart2{ serial }
+        //singleton!(: Uart2 = Uart2{serial}).unwrap()
     }
 }
 

@@ -4,4 +4,6 @@
 target = "thumbv6m-none-eabi"
 
 # use the Tlink.x script from the cortext-m-rt crate
-rustflags = [ "-C", "link-arg=-Tlink.x"]
+rustflags = [ 
+  "-C", "link-arg=-Tlink.x",
+]

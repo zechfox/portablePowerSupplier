@@ -1,4 +1,4 @@
-mod display;
-mod control;
-mod measurement;
-mod timer;
+pub mod display;
+pub mod control;
+pub mod measurement;
+pub mod timer;

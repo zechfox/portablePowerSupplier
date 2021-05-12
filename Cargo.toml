@@ -16,8 +16,22 @@ cortex-m-rt = "0.6.8"  # Startup code for the ARM Core
 embedded-hal = "^0.2.4"  # Access to generic embedded functions (`set_high`)
 panic-halt = "^0.2.0"    # Panic handler
 nb = "0.1.2"
+ufmt = "0.1.0"
+ufmt-write = ""
 # Access to the stm32f030 HAL.
 [dependencies.stm32f0xx-hal]
 # Bluepill contains a 64kB flash variant which is called "medium density"
 features = ["stm32f030x8"]
 version = "0.17"
+[features]
+default = [
+  "defmt-default", # <- ADD this feature
+]
+# ↓↓↓↓↓
+defmt-default = []
+defmt-trace = []
+defmt-debug = []
+defmt-info = []
+defmt-warn = []
+defmt-error = []
+# ↑↑↑↑↑

@@ -10,7 +10,7 @@ pub trait Device {
 }
 
 pub struct SerialPort {
-    peripheral: &'static mut Uart2,
+    peripheral: Uart2,
 }
 
 impl Device for SerialPort {
@@ -33,11 +33,11 @@ impl Transceiver<SerialPort> {
         baud_rate: Some(BAUD_RATE_115200),
         parity: Some(UartParity::None),
         stop_bits: Some(UartStopBits::Stop1),
-    };
+        };
 
-    let uart = UartBuilder::new(uart_conf).take_uart2();
+        let uart = UartBuilder::new(uart_conf).take_uart2();
 
-    Transceiver { device: SerialPort {peripheral:uart} }
+        Transceiver { device: SerialPort {peripheral:uart} }
     }
 }
 
@@ -45,6 +45,7 @@ impl<DeviceType> Transceiver<DeviceType>
 where
     DeviceType: Device,
 {
+    #[allow(dead_code)]
     pub fn write_byte(&mut self, b: u8) {
         self.device.write_byte(b); 
     }
