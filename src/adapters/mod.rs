@@ -1,4 +1,4 @@
-mod gpio;
+pub mod gpio;
 mod i2c;
 mod spi;
 pub mod uart;
