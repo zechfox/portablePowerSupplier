@@ -1,5 +1,5 @@
 use crate::{
-    adapters::uart::{Uart2, UartBuilder, UartConfiguration, UartParity, UartStopBits},
+    board::uart::{Uart2, UartBuilder, UartConfiguration, UartParity, UartStopBits},
     common::constants::{BAUD_RATE_115200},
 };
 
