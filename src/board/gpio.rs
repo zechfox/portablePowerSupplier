@@ -31,10 +31,10 @@ impl GpioBuilder {
 
 macro_rules! prepare_gpio {
 
-    ($GPIOX:ident, $pxi:ident, $PXi:ident, Output, OpenDrain) => {
+    ($GPIOX:ident, $pxi:ident, $PXi:ident, Output, $mode:ident) => {
         paste! {
             pub struct [<Gpio $PXi>]{
-                gpio: $PXi<Output<OpenDrain>>,
+                gpio: $PXi<Output<$mode>>,
             }
 
             impl OutputPin for [<Gpio $PXi>] {
@@ -51,44 +51,18 @@ macro_rules! prepare_gpio {
                         let mut p = pac::Peripherals::take().unwrap();
                         let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut p.FLASH);
                         let gpio = p.$GPIOX.split(&mut rcc);
-                        let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.into_open_drain_output(cs));
+                        let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.[<into_ $mode:snake _output>](cs));
 
                         [<Gpio $PXi>] {gpio:pin}
                     }
             }
         }
     };
-    ($GPIOX:ident, $pxi:ident, $PXi:ident, Output, PushPull) => {
+
+    ($GPIOX:ident, $pxi:ident, $PXi:ident, Input, $mode:ident) => {
         paste! {
             pub struct [<Gpio $PXi>]{
-                gpio: $PXi<Output<PushPull>>,
-            }
-
-            impl OutputPin for [<Gpio $PXi>] {
-                fn set_high(&mut self) {
-                    self.gpio.set_high();
-                }
-                fn set_low(&mut self) {
-                    self.gpio.set_low();
-                }
-            }
-
-            impl GpioBuilder {
-                    pub fn [<take_gpio_ $pxi>](self) -> [<Gpio $PXi>] {
-                        let mut p = pac::Peripherals::take().unwrap();
-                        let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut p.FLASH);
-                        let gpio = p.$GPIOX.split(&mut rcc);
-                        let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.into_push_pull_output(cs));
-
-                        [<Gpio $PXi>] {gpio:pin}
-                    }
-            }
-        }
-    };
-    ($GPIOX:ident, $pxi:ident, $PXi:ident, Input, PullUp) => {
-        paste! {
-            pub struct [<Gpio $PXi>]{
-                gpio: $PXi<Input<PullUp>>,
+                gpio: $PXi<Input<$mode>>,
             }
 
             impl InputPin for [<Gpio $PXi>] {
@@ -104,65 +78,14 @@ macro_rules! prepare_gpio {
                         let mut p = pac::Peripherals::take().unwrap();
                         let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut p.FLASH);
                         let gpio = p.$GPIOX.split(&mut rcc);
-                        let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.into_pull_up_input(cs));
+                        let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.[<into_ $mode:snake _input>](cs));
 
                         [<Gpio $PXi>]{gpio:pin}
                     }
             }
         }
     };
-    ($GPIOX:ident, $pxi:ident, $PXi:ident, Input, PullDown) => {
-        paste! {
-            pub struct [<Gpio $PXi>]{
-                gpio: $PXi<Input<PullDown>>,
-            }
 
-            impl InputPin for [<Gpio $PXi>] {
-                fn is_high(&self) -> bool {
-                    self.gpio.is_high().unwrap()
-                }
-                fn is_low(&self) -> bool {
-                    self.gpio.is_low().unwrap()
-                }
-            }
-            impl GpioBuilder {
-                    pub fn [<take_gpio_ $pxi>](self) -> [<Gpio $PXi>] {
-                        let mut p = pac::Peripherals::take().unwrap();
-                        let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut p.FLASH);
-                        let gpio = p.$GPIOX.split(&mut rcc);
-                        let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.into_pull_down_input(cs));
-
-                        [<Gpio $PXi>]{gpio:pin}
-                    }
-            }
-        }
-    };
-    ($GPIOX:ident, $pxi:ident, $PXi:ident, Input, Floating) => {
-        paste! {
-            pub struct [<Gpio $PXi>]{
-                gpio: $PXi<Input<Floating>>,
-            }
-
-            impl InputPin for [<Gpio $PXi>] {
-                fn is_high(&self) -> bool {
-                    self.gpio.is_high().unwrap()
-                }
-                fn is_low(&self) -> bool {
-                    self.gpio.is_low().unwrap()
-                }
-            }
-            impl GpioBuilder {
-                    pub fn [<take_gpio_ $pxi>](self) -> [<Gpio $PXi>] {
-                        let mut p = pac::Peripherals::take().unwrap();
-                        let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut p.FLASH);
-                        let gpio = p.$GPIOX.split(&mut rcc);
-                        let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.into_floating_input(cs));
-
-                        [<Gpio $PXi>] {gpio:pin}
-                    }
-            }
-        }
-    };
 }
 /// GPIOs used in board.
 prepare_gpio!(GPIOB, pb12, PB12, Output, OpenDrain);
