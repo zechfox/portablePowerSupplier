@@ -13,7 +13,6 @@ use panic_halt as _; // When a panic occurs, stop the microcontroller
 use crate::{
     utils::logger::Logger,
     services::display::display_init,
-    board::gpio::{GpioPB12},
 };
 // This marks the entrypoint of our application. The cortex_m_rt creates some
 // startup code before this, but we don't need to worry about this

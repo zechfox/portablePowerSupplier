@@ -46,16 +46,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "concat-idents"
-version = "1.1.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f29bafee6d91a80db18bcd41dbdbb8d1d117ea31676b22e7370061ccea5f76c"
-dependencies = [
- "quote",
- "syn",
-]
-
-[[package]]
 name = "cortex-m"
 version = "0.6.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -161,15 +151,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "de96540e0ebde571dc55c73d60ef407c653844e6f9a1e2fdbd40c07b9252d812"
 
 [[package]]
+name = "paste"
+version = "1.0.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "acbf547ad0c65e31259204bd90935776d1c693cec2f4ff7abb7a1bbbd40dfe58"
+
+[[package]]
 name = "portable_power_supplier"
 version = "0.1.0"
 dependencies = [
- "concat-idents",
  "cortex-m 0.6.7",
  "cortex-m-rt",
  "embedded-hal",
  "nb 0.1.3",
  "panic-halt",
+ "paste",
  "stm32f0xx-hal",
  "ufmt",
  "ufmt-write",

@@ -18,7 +18,7 @@ panic-halt = "^0.2.0"    # Panic handler
 nb = "0.1.2"
 ufmt = "0.1.0"
 ufmt-write = ""
-concat-idents = ""
+paste = ""
 # Access to the stm32f030 HAL.
 [dependencies.stm32f0xx-hal]
 # Bluepill contains a 64kB flash variant which is called "medium density"
