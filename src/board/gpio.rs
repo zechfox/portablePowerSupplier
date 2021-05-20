@@ -11,14 +11,6 @@ use paste::paste;
 use crate::common::{
     constants,
 };
-trait OutputPin {
-    fn set_high(&mut self);
-    fn set_low(&mut self);
-}
-trait InputPin {
-    fn is_high(&self) -> bool;
-    fn is_low(&self) -> bool;
-}
 
 pub struct GpioBuilder {
 }
@@ -33,16 +25,16 @@ macro_rules! prepare_gpio {
 
     ($GPIOX:ident, $pxi:ident, $PXi:ident, Output, $mode:ident) => {
         paste! {
-            pub struct [<Gpio $PXi>]{
+            pub struct [<Gpio $PXi>] {
                 gpio: $PXi<Output<$mode>>,
             }
 
-            impl OutputPin for [<Gpio $PXi>] {
-                fn set_high(&mut self) {
-                    self.gpio.set_high();
+            impl [<Gpio $PXi>] {
+                pub fn set_high(&mut self) {
+                    self.gpio.set_high().ok();
                 }
-                fn set_low(&mut self) {
-                    self.gpio.set_low();
+                pub fn set_low(&mut self) {
+                    self.gpio.set_low().ok();
                 }
             }
 
@@ -65,11 +57,11 @@ macro_rules! prepare_gpio {
                 gpio: $PXi<Input<$mode>>,
             }
 
-            impl InputPin for [<Gpio $PXi>] {
-                fn is_high(&self) -> bool {
+            impl [<Gpio $PXi>] {
+                pub fn is_high(&self) -> bool {
                     self.gpio.is_high().unwrap()
                 }
-                fn is_low(&self) -> bool {
+                pub fn is_low(&self) -> bool {
                     self.gpio.is_low().unwrap()
                 }
             }

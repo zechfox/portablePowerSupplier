@@ -1,8 +1,12 @@
 use crate::{
     utils::logger::Logger,
+    devices::lcd::Lcd,
 };
 
 pub fn display_init() {
-   log!("Display Init!\n");
+
+    let lcd_device = Lcd::new();
+
+    log!("Display Init!\n");
 }
 
