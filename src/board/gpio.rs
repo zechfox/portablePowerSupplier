@@ -41,7 +41,7 @@ macro_rules! prepare_gpio {
             impl GpioBuilder {
                     pub fn [<take_gpio_ $pxi>](self) -> [<Gpio $PXi>] {
                         let mut p = pac::Peripherals::take().unwrap();
-                        let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut p.FLASH);
+                        let mut rcc = p.RCC.configure().freeze(&mut p.FLASH);
                         let gpio = p.$GPIOX.split(&mut rcc);
                         let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.[<into_ $mode:snake _output>](cs));
 
@@ -68,7 +68,7 @@ macro_rules! prepare_gpio {
             impl GpioBuilder {
                     pub fn [<take_gpio_ $pxi>](self) -> [<Gpio $PXi>] {
                         let mut p = pac::Peripherals::take().unwrap();
-                        let mut rcc = p.RCC.configure().sysclk(constants::SYSTEM_CLOCK.mhz()).freeze(&mut p.FLASH);
+                        let mut rcc = p.RCC.configure().freeze(&mut p.FLASH);
                         let gpio = p.$GPIOX.split(&mut rcc);
                         let pin = cortex_m::interrupt::free(move |cs| gpio.$pxi.[<into_ $mode:snake _input>](cs));
 

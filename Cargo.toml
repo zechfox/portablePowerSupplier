@@ -19,6 +19,9 @@ nb = "0.1.2"
 ufmt = "0.1.0"
 ufmt-write = ""
 paste = ""
+num-traits = { version = "0.2.12", default-features = false }
+num-derive = { version = "0.3.2", default-features = false }
+embedded-graphics = { optional = true, version = "0.6.2" }
 # Access to the stm32f030 HAL.
 [dependencies.stm32f0xx-hal]
 # Bluepill contains a 64kB flash variant which is called "medium density"
@@ -27,7 +30,9 @@ version = "0.17"
 [features]
 default = [
   "defmt-default", # <- ADD this feature
+  "graphics",
 ]
+graphics = ["embedded-graphics"]
 # ↓↓↓↓↓
 defmt-default = []
 defmt-trace = []
