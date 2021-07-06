@@ -4,3 +4,4 @@ mod spi;
 pub mod uart;
 mod counter;
 mod flash_controller;
+pub mod board;

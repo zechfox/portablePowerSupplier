@@ -12,8 +12,8 @@ use mcu_hal::{
 };
 use nb::block;
 use core::fmt::Write;
-use crate::common::{
-    constants,
+use crate::{
+    common::{constants},
 };
 #[allow(dead_code)]
 pub enum UartParity {

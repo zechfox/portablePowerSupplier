@@ -3,11 +3,9 @@ use panic_halt as _;
 use mcu_hal::{
     pac,
     rcc,
-    FLASH,
     prelude::*,
     serial::{Serial},
-    gpio::{Alternate, AF1},
-    gpio::gpioa::{PA2, PA3},
+    gpio::{gpioa, Alternate, AF1},
     stm32,
 };
 
@@ -19,9 +17,9 @@ pub struct BoardBuilder {
     sysclk: u32,
 }
 pub struct Board {
-    peripherals: pac::Peripherals,
-    flash: FLASH,
+    flash: pac::FLASH,
     rcc: rcc::Rcc,
+    gpioa: gpioa::Parts,
 }
 
 impl BoardBuilder {
@@ -32,6 +30,8 @@ impl BoardBuilder {
         let p = pac::Peripherals::take().unwrap();
         let mut flash = p.FLASH;
         let mut rcc = p.RCC.configure().sysclk(self.sysclk.mhz()).freeze(&mut flash);
-        Board {p}
+        let gpioa = p.GPIOA.split(&mut rcc);
+
+        Board { flash:flash, rcc:rcc, gpioa:gpioa}
     }
 }
